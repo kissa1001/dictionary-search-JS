@@ -1,7 +1,8 @@
 //Reading dictionary.txt file and save result to an array
 var fs = require('fs');
 var readline = require('readline');
-var dictionary = fs.readFileSync('dictionary.txt').toString().split(/\r?\n/).filter(Boolean);
+var dictionary = fs.readFileSync('dictionary.txt').toString().replace(/(\r\n|\n|\r)/gm, ",").split(",").filter(Boolean);
+//I assumed that input is lines of strings
 //Reading tiles.txt file and save result to array of objects
 fs.readFile('tiles.txt', function(err, data) {
     if(err) throw err;
@@ -25,16 +26,20 @@ fs.readFile('tiles.txt', function(err, data) {
 
 //Main function
 function dictionarySearch(dictionary, tilesArray){
-  //Intializing result array
-  var result = [];
   //Looping through tiles array and dictionary array of objects
   for(var i = 0; i < tilesArray.length; i++){
-    for(var j = 0; j < dictionary.length; j++){
-      //put every word of array to every tiles set to check if that word match
-      if(match(dictionary[j],tilesArray[i])){
-        //if yes, push this word to result array
-        result.push(dictionary[j]);
-      }
+    matchDictionary(dictionary, tilesArray[i]);
+  }
+}
+//Check dictionary with specific tile
+function matchDictionary(dictionary, tiles){
+  //Intializing result array
+  var result = [];
+  for(var j = 0; j < dictionary.length; j++){
+    //put every word of array to every tiles set to check if that word match
+    if(match(dictionary[j],tiles)){
+      //if yes, push this word to result array
+      result.push(dictionary[j]);
     }
   }
   console.log(result);
