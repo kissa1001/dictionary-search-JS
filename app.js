@@ -1,21 +1,20 @@
 //Reading dictionary.txt file and save result to an array
 var fs = require('fs');
 var readline = require('readline');
-var dictionary = [], tiles = [], tilesArray = [];
-fs.readFile('dictionary.txt', function(err, data) {
-    if(err) throw err;
-    dictionary = data.toString().split(/\r?\n/).filter(Boolean);
-});
+var dictionary = fs.readFileSync('dictionary.txt').toString().split(/\r?\n/).filter(Boolean);
 //Reading tiles.txt file and save result to array of objects
 fs.readFile('tiles.txt', function(err, data) {
     if(err) throw err;
-    tiles = data.toString().split("\n").filter(Boolean);
+    var tiles = data.toString().split("\n").filter(Boolean);
     tilesArray = tiles.map(function(i){
       var filtered = i.split("").filter(function(e){return e !== " ";});
       return filtered.reduce(function(tilesObject, item) {
-        if(item !== " "){
-          tilesObject[item] = item;
+        if(item !== " " && !tilesObject[item]){
+          tilesObject[item] = 1;
           tilesObject.blank = 7 - filtered.length;
+        }
+        else if(item !== " " && tilesObject[item]){
+          tilesObject[item] += 1;
         }
         return tilesObject;
       }, {});
@@ -23,6 +22,7 @@ fs.readFile('tiles.txt', function(err, data) {
     dictionarySearch(dictionary, tilesArray);
     process.exit();
 });
+
 //Main function
 function dictionarySearch(dictionary, tilesArray){
   //Intializing result array
@@ -41,28 +41,48 @@ function dictionarySearch(dictionary, tilesArray){
 }
 //Function to check if the word matches tiles set
 function match(word, tiles){
-  //Creating array of word letters
-  wordSplited = word.split("");
-  //set number of wildcard to blanks variable
+  //Intializing screenArray(contains result of screening each letter)
+  var screenArray = [],
+  //Wordsplited variable is array of current word letters
+  wordSplited = word.split(""),
+  //Set in currentTiles variable copy of tiles object
+  currentTiles = tiles,
+  //Set in blanks array number of wildCards
   blanks = tiles.blank;
-  //Looping through each letter in the word
+  //Looping through array of word letters
   for(var i = 0; i < wordSplited.length; i++){
     currentLetter = wordSplited[i];
-    //Check to see if current letter is in our tile set
-    //If not
-    if(!tiles[currentLetter]){
-      //We check if we have any blanks, and if yes, we decrement number of blanks
+    //If current letter is not in tiles object,
+    //check blank spaces, if yes, decrement number of blanks,
+    //if no, push the result false to screenArray
+    if(!currentTiles[currentLetter]){
       if(blanks > 0){
         blanks -= 1;
       }
-      //If there are no blanks, we return false
       else{
-        return false;
+        screenArray.push(false);
       }
     }
-    //If current letter is in tile set, return true
+    //If current letter is in tiles object,
+    //check the count of this letter,
+    //if > 0 we decrement letter count and push true to screenArray
+    //if = 0 we push false to screenArray
     else{
-      return true;
+      if(currentTiles[currentLetter] === 0){
+        screenArray.push(false);
+      }
+      else{
+        currentTiles[currentLetter] -= 1;
+        screenArray.push(true);
+      }
     }
+  }
+  //Finally we check if any false value is in screenArray
+  //If yes, we return false, otherwise, return true
+  if(screenArray.indexOf(false) > -1){
+    return false;
+  }
+  else{
+    return true;
   }
 }
