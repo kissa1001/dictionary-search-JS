@@ -1,6 +1,6 @@
-//Reading dictionary.txt file and save result to an array
 var fs = require('fs');
 var readline = require('readline');
+//Reading dictionary.txt file and save result to an array
 var dictionary = fs.readFileSync('dictionary.txt').toString().replace(/(\r\n|\n|\r)/gm, ",").split(",").filter(Boolean);
 //I assumed that input is lines of strings
 //Reading tiles.txt file and save result to array of objects
@@ -51,7 +51,7 @@ function match(word, tiles){
   //Wordsplited variable is array of current word letters
   wordSplited = word.split(""),
   //Set in currentTiles variable copy of tiles object
-  currentTiles = tiles,
+  currentTiles = Object.assign({}, tiles),
   //Set in blanks array number of wildCards
   blanks = tiles.blank;
   //Looping through array of word letters
@@ -91,3 +91,11 @@ function match(word, tiles){
     return true;
   }
 }
+
+//Big O analysis
+//Assume that we have a dictionary with length m and n number of tiles set
+//We first loop through number of tiles (Main function), so time complexity depends on n
+//Then we loop though each word in dictionary, so time complexity depends on m
+//After that, we look through each letter of the word(that takes less or equal O(7), cos only 7 tiles),
+//If that word matches criteria, we add to result
+//So finally the time complexity is O(nm)
