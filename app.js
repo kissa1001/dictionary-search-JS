@@ -105,4 +105,4 @@ function match(word, tiles) {
  Then we loop though each word in dictionary, so time complexity depends on m
  After that, we look through each letter of the word(that takes less or equal O(7), cos only 7 tiles),
  If that word matches criteria, we add to result
- So finally the time complexity is O(nm) */
+ So finally the time complexity is O(nm) , space complexity O(nm)*/
