@@ -99,10 +99,10 @@ function match(word, tiles) {
     }
 }
 
-// Big O analysis
-// Assume that we have a dictionary with length m and n number of tiles set
-// We first loop through number of tiles (Main function), so time complexity depends on n
-// Then we loop though each word in dictionary, so time complexity depends on m
-// After that, we look through each letter of the word(that takes less or equal O(7), cos only 7 tiles),
-// If that word matches criteria, we add to result
-// So finally the time complexity is O(nm)
+/* Big O analysis
+ Assume that we have a dictionary with length m and n number of tiles set
+ We first loop through number of tiles (Main function), so time complexity depends on n
+ Then we loop though each word in dictionary, so time complexity depends on m
+ After that, we look through each letter of the word(that takes less or equal O(7), cos only 7 tiles),
+ If that word matches criteria, we add to result
+ So finally the time complexity is O(nm) */
