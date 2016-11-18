@@ -51,13 +51,13 @@ function dictionarySearch(dictionary, tilesArray) {
 // Check dictionary with specific tile
 
 function matchDictionary(dictionary, tiles) {
-    // Intializing result array
-    var result = [];
+    // Intializing result variable
+    var result = "";
     for (var j = 0; j < dictionary.length; j++) {
         // put every word of array to every tiles set to check if that word match
         if (match(dictionary[j], tiles)) {
-            // if yes, push this word to result array
-            result.push(dictionary[j]);
+            // if yes, push this word to result
+            result += dictionary[j] + ", "
         }
     }
     return result;
